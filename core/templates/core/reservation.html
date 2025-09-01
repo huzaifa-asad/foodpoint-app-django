@@ -1,0 +1,114 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Reservation{% endblock title %}
+
+{% block hero %}
+<section class="bg-gradient-to-b from-orange-100 via-orange-50 to-white">
+  <div class="container mx-auto px-6 py-14">
+    <h1 class="text-3xl lg:text-4xl font-bold text-gray-800">Reserve a Table</h1>
+    <p class="mt-2 text-gray-600">Plan your visit and we’ll have a cozy spot waiting for you.</p>
+  </div>
+</section>
+{% endblock hero %}
+
+{% block maincontent %}
+<section class="container mx-auto px-6 py-16">
+	{% if submitted %}
+		<div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-8">
+			<div class="flex items-start gap-4">
+				<div class="flex-shrink-0 text-green-600">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8"><path d="M10.28 16.72a.75.75 0 01-1.06 0l-3.22-3.22a.75.75 0 111.06-1.06l2.69 2.69 6.44-6.44a.75.75 0 111.06 1.06l-7 7z"/><path d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25z"/></svg>
+				</div>
+				<div>
+					<h2 class="text-2xl font-semibold text-gray-800">Reservation confirmed!</h2>
+					<p class="mt-2 text-gray-600">Thanks {{ data.name }}. We’ve noted your booking for <span class="font-medium">{{ data.guests }}</span> guest(s) on <span class="font-medium">{{ data.date }}</span> at <span class="font-medium">{{ data.time }}</span>.</p>
+					<a href="{% url 'home' %}" class="mt-6 inline-block bg-orange-500 text-white px-6 py-3 rounded-full hover:bg-orange-600">Back to Home</a>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div class="grid gap-8 lg:grid-cols-3">
+			<!-- Form Card -->
+			<form method="post" class="lg:col-span-2 bg-white rounded-2xl shadow p-6">
+				{% csrf_token %}
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Name</label>
+						<input name="name" value="{{ data.name }}" class="mt-1 w-full border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200" placeholder="Full Name" required>
+						{% if errors.name %}<p class="text-sm text-red-600 mt-1">{{ errors.name }}</p>{% endif %}
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Phone</label>
+						<input name="phone" value="{{ data.phone }}" class="mt-1 w-full border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200" placeholder="+92 300 000 000" required>
+						{% if errors.phone %}<p class="text-sm text-red-600 mt-1">{{ errors.phone }}</p>{% endif %}
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Date</label>
+						<input type="date" name="date" value="{{ data.date }}" class="mt-1 w-full border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200" required>
+						{% if errors.date %}<p class="text-sm text-red-600 mt-1">{{ errors.date }}</p>{% endif %}
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Time</label>
+						<input type="time" name="time" value="{{ data.time }}" class="mt-1 w-full border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200" required>
+						{% if errors.time %}<p class="text-sm text-red-600 mt-1">{{ errors.time }}</p>{% endif %}
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Guests</label>
+						<input type="number" name="guests" value="{{ data.guests }}" min="1" class="mt-1 w-full border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200" placeholder="2" required>
+						{% if errors.guests %}<p class="text-sm text-red-600 mt-1">{{ errors.guests }}</p>{% endif %}
+					</div>
+
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Email (optional)</label>
+						<input type="email" name="email" value="{{ data.email }}" class="mt-1 w-full border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200" placeholder="you@example.com">
+					</div>
+
+					<div class="sm:col-span-2">
+						<label class="block text-sm font-medium text-gray-700">Notes (optional)</label>
+						<textarea name="notes" rows="3" class="mt-1 w-full border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200" placeholder="Dietary needs, special requests...">{{ data.notes }}</textarea>
+					</div>
+				</div>
+
+				<div class="mt-6 flex justify-end">
+					<button type="submit" class="bg-orange-500 text-white px-6 py-3 rounded-full hover:bg-orange-600">Book Now</button>
+				</div>
+			</form>
+
+			<!-- Info Sidebar -->
+			<aside class="bg-orange-50 rounded-2xl border border-orange-100 p-6 h-fit">
+				<h3 class="text-xl font-semibold text-gray-800">Visit Us</h3>
+				<p class="mt-2 text-gray-600">123 Flavor Street, Foodville</p>
+
+				<div class="mt-4">
+					<h4 class="font-medium text-gray-800">Hours</h4>
+					<ul class="mt-2 text-gray-700 text-sm space-y-1">
+						<li>Mon–Fri: 10:00 AM – 10:00 PM</li>
+						<li>Sat–Sun: 10:00 AM – 11:00 PM</li>
+					</ul>
+				</div>
+
+				<div class="mt-4">
+					<h4 class="font-medium text-gray-800">Contact</h4>
+					<ul class="mt-2 text-gray-700 text-sm space-y-1">
+						<li>Email: <a class="text-orange-600 hover:underline" href="mailto:hello@foodpoint.local">hello@foodpoint.local</a></li>
+						<li>Phone: <a class="text-orange-600 hover:underline" href="tel:+10000000000">+92 (300) 000-0000</a></li>
+					</ul>
+				</div>
+
+				<div class="mt-6 text-sm text-gray-600">
+					<h4 class="font-medium text-gray-800">Policies</h4>
+					<ul class="mt-2 list-disc list-inside space-y-1">
+						<li>We hold tables for 15 minutes past the reserved time.</li>
+						<li>Please inform us of allergies in the notes.</li>
+						<li>For groups of 8+, call us to confirm.</li>
+					</ul>
+				</div>
+			</aside>
+		</div>
+	{% endif %}
+</section>
+{% endblock maincontent %}

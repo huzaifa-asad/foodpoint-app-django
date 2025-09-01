@@ -1,0 +1,55 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Contact{% endblock title %}
+
+{% block hero %}
+<section class="bg-gradient-to-b from-orange-100 via-orange-50 to-white">
+	<div class="container mx-auto px-6 py-14">
+		<h1 class="text-3xl lg:text-4xl font-bold text-gray-800">Contact Us</h1>
+		<p class="mt-2 text-gray-600">We’d love to hear from you. Reach out or plan your visit.</p>
+	</div>
+	</section>
+{% endblock hero %}
+
+{% block maincontent %}
+<section class="container mx-auto px-6 py-16">
+	<div class="grid gap-8 lg:grid-cols-3">
+		<!-- Visit Us -->
+		<div class="bg-white rounded-2xl shadow p-6">
+			<h2 class="text-xl font-semibold text-gray-800">Visit Us</h2>
+			<p class="mt-2 text-gray-600">123 Flavor Street, Foodville</p>
+		</div>
+
+		<!-- Hours -->
+		<div class="bg-white rounded-2xl shadow p-6">
+			<h2 class="text-xl font-semibold text-gray-800">Hours</h2>
+			<ul class="mt-2 text-gray-700 space-y-1">
+				<li>Mon–Fri: 10:00 AM – 10:00 PM</li>
+				<li>Sat–Sun: 10:00 AM – 11:00 PM</li>
+			</ul>
+		</div>
+
+		<!-- Contact -->
+		<div class="bg-white rounded-2xl shadow p-6">
+			<h2 class="text-xl font-semibold text-gray-800">Contact</h2>
+			<ul class="mt-2 text-gray-700 space-y-1">
+				<li>Email: <a href="mailto:hello@foodpoint.local" class="text-orange-600 hover:underline">hello@foodpoint.local</a></li>
+				<li>Phone: <a href="tel:+10000000000" class="text-orange-600 hover:underline">+92 (300) 000-0000</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="mt-8 bg-orange-50 border border-orange-100 rounded-2xl p-6">
+		<h2 class="text-xl font-semibold text-gray-800">Policies</h2>
+		<ul class="mt-2 list-disc list-inside text-gray-700 space-y-1">
+			<li>We hold tables for 15 minutes past the reserved time.</li>
+			<li>Please inform us of allergies in the notes.</li>
+			<li>For groups of 8+, call us to confirm.</li>
+		</ul>
+	</div>
+
+	<div class="mt-10">
+		<a href="{% url 'reservation' %}" class="inline-block bg-orange-500 text-white px-6 py-3 rounded-full hover:bg-orange-600">Book a Table</a>
+	</div>
+</section>
+{% endblock maincontent %}

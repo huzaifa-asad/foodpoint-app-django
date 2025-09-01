@@ -1,0 +1,70 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Order Track{% endblock title %}
+
+{% block hero %}
+<section class="bg-gradient-to-b from-orange-100 via-orange-50 to-white">
+	<div class="container mx-auto px-6 py-14">
+		<h1 class="text-3xl lg:text-4xl font-bold text-gray-800">Track Your Order</h1>
+		<p class="mt-2 text-gray-600">Enter your order code (e.g., FP1234) or phone number to see the latest status.</p>
+	</div>
+</section>
+{% endblock hero %}
+
+{% block maincontent %}
+<section class="container mx-auto px-6 py-16">
+	<form method="get" class="max-w-xl mx-auto flex gap-3">
+		<input type="text" name="order" value="{{ q }}" placeholder="Order code or phone" class="flex-1 border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200 bg-white">
+		<button class="bg-orange-500 text-white px-5 py-2 rounded-lg hover:bg-orange-600">Track</button>
+	</form>
+
+	{% if not_found %}
+	<div class="max-w-xl mx-auto mt-6 bg-white rounded-2xl shadow p-6">
+		<p class="text-gray-700">No order found for “{{ q }}”. Please check your code or phone and try again.</p>
+	</div>
+	{% endif %}
+
+	{% if order %}
+	<div class="mt-10 grid gap-8 lg:grid-cols-3">
+		<!-- Status Card -->
+		<div class="lg:col-span-2 bg-white rounded-2xl shadow p-6">
+			<div class="flex items-center justify-between">
+				<div>
+					<h2 class="text-xl font-semibold text-gray-800">Status: <span class="text-orange-600">{{ order.status }}</span></h2>
+					<p class="text-gray-600 mt-1">ETA: {{ order.eta }}</p>
+				</div>
+				<span class="text-sm text-gray-500">Order #{{ order.code }}</span>
+			</div>
+
+			<!-- Timeline -->
+			<ol class="mt-6 relative border-l border-orange-200">
+				{% for step in order.steps %}
+				<li class="ml-6 mb-6">
+					<span class="absolute -left-2.5 mt-1 w-5 h-5 rounded-full {% if forloop.counter0 <= order.current_step %}bg-orange-500{% else %}bg-orange-200{% endif %}"></span>
+					<p class="{% if forloop.counter0 <= order.current_step %}text-gray-900{% else %}text-gray-400{% endif %}">{{ step }}</p>
+				</li>
+				{% endfor %}
+			</ol>
+		</div>
+
+		<!-- Details Card -->
+		<aside class="bg-orange-50 rounded-2xl border border-orange-100 p-6 h-fit">
+			<h3 class="text-lg font-semibold text-gray-800">Order Details</h3>
+			<ul class="mt-3 text-gray-700 text-sm space-y-1">
+				<li><span class="text-gray-500">Placed:</span> {{ order.placed_at }}</li>
+				<li><span class="text-gray-500">Phone:</span> {{ order.phone }}</li>
+				<li><span class="text-gray-500">Total:</span> ${{ order.total }}</li>
+			</ul>
+			<div class="mt-4">
+				<h4 class="font-medium text-gray-800">Items</h4>
+				<ul class="mt-2 list-disc list-inside text-gray-700 text-sm space-y-1">
+					{% for item in order.items %}
+					<li>{{ item }}</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</aside>
+	</div>
+	{% endif %}
+</section>
+{% endblock maincontent %}

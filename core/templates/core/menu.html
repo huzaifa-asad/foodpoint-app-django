@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Menu{% endblock title %}
+
+{% block hero %}
+<section class="bg-gradient-to-b from-orange-100 via-orange-50 to-white">
+	<div class="container mx-auto px-6 py-14">
+		<h1 class="text-3xl lg:text-4xl font-bold text-gray-800">Menu</h1>
+		{% if q %}
+		<p class="mt-2 text-gray-600">Results for “{{ q }}” — {{ count }} item{{ count|pluralize }}</p>
+		{% else %}
+		<p class="mt-2 text-gray-600">Browse our favorites and find your next craving.</p>
+		{% endif %}
+	</div>
+</section>
+{% endblock hero %}
+
+{% block maincontent %}
+<section class="container mx-auto px-6 py-16">
+	{% if results %}
+	<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+		{% for d in results %}
+		<div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-5">
+			{% if d.image %}
+			<img src="{{ d.image.url }}" alt="{{ d.name }}" class="h-40 w-full object-contain rounded-xl bg-orange-50">
+			{% else %}
+			<img src="{% static 'core/images/paneer.png' %}" alt="{{ d.name }}" class="h-40 w-full object-contain rounded-xl bg-orange-50">
+			{% endif %}
+			<div class="mt-4">
+				<h3 class="font-semibold text-gray-800">{{ d.name }}</h3>
+				<p class="text-sm text-gray-500 mt-1">{{ d.description }}</p>
+				<div class="mt-4 flex items-center justify-between">
+					<span class="text-orange-600 font-bold">${{ d.price }}</span>
+					<a href="{% url 'cart_add' d.id %}?next={{ request.get_full_path|urlencode }}" class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600">Add</a>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="bg-white rounded-2xl shadow p-8 text-center">
+		<p class="text-gray-700">No matches found. Try a different search.</p>
+	</div>
+	{% endif %}
+</section>
+{% endblock maincontent %}

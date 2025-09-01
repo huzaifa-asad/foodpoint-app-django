@@ -1,0 +1,92 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+
+{% block hero %}
+<section class="bg-gradient-to-b from-orange-100 via-orange-50 to-white">
+    <div class="container mx-auto px-6 py-16 flex flex-col lg:flex-row
+    items-center">
+    <div class="lg:w-1/2">
+        <h1 class="text-3xl lg:text-4xl font-bold text-gray-800">Enjoy Delicious</h1>
+        <h1 class="text-4xl lg:text-5xl font-bold text-orange-500 pt-5">Traditional Food</h1>
+        <p class="mt-4 text-gray-600">
+          Good food warms the heart and mends the soul.
+        </p>
+    <a href="{% url 'reservation' %}" class="mt-6 inline-block bg-orange-500 text-white px-6
+    py-3 rounded-full shadow-lg hover:bg-orange-600">Book Now</a>
+    </div>
+    <div class="lg:w-1/2 mt-10 flex justify-center">
+        <img src="{% static "core/images/paneer.png" %}" alt="Sushi Platter"
+        class="w-4/5 sm:w-3/4 max-w-md">
+    </div>
+</div>
+</section>
+{% endblock hero %}
+
+{% block maincontent %}
+<section id="dishes" class="container mx-auto px-16 py-16">
+    <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-800">Popular Dishes</h2>
+        <p class="mt-2 text-gray-600">Taste our favorites picked just for you.</p>
+    </div>
+
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {% for d in dishes %}
+            <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-5">
+                {% if d.image %}
+                <img src="{{ d.image.url }}" alt="{{ d.name }}" class="h-40 w-full object-contain rounded-xl bg-orange-50">
+                {% else %}
+                <img src="{% static 'core/images/paneer.png' %}" alt="{{ d.name }}" class="h-40 w-full object-contain rounded-xl bg-orange-50">
+                {% endif %}
+                <div class="mt-4">
+                    <h3 class="font-semibold text-gray-800">{{ d.name }}</h3>
+                    <p class="text-sm text-gray-500 mt-1">{{ d.description }}</p>
+                    <div class="mt-4 flex items-center justify-between">
+                        <span class="text-orange-600 font-bold">${{ d.price }}</span>
+                        <a href="{% url 'cart_add' d.id %}?next={{ request.path }}" class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600">Add</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+</section>
+<!-- About Section -->
+<section id="about" class="bg-orange-50">
+    <div class="container mx-auto px-6 py-16 flex flex-col-reverse lg:flex-row items-center gap-10">
+        <div class="lg:w-1/2">
+            <h2 class="text-3xl lg:text-4xl font-bold text-gray-800">About FoodPoint</h2>
+            <p class="mt-4 text-gray-600">
+                We serve comforting classics and modern favorites made with fresh ingredients and lots of love.
+                Whether you’re craving rich curries or smoky grills, we’ve got a plate for every mood.
+            </p>
+            <ul class="mt-6 space-y-3 text-gray-700">
+                <li class="flex items-start gap-3"><span class="text-orange-500">✓</span> Fresh, quality ingredients</li>
+                <li class="flex items-start gap-3"><span class="text-orange-500">✓</span> Authentic flavors crafted by chefs</li>
+                <li class="flex items-start gap-3"><span class="text-orange-500">✓</span> Quick service and friendly vibes</li>
+            </ul>
+            <a href="#dishes" class="mt-8 inline-block bg-orange-500 text-white px-6 py-3 rounded-full hover:bg-orange-600">Browse Menu</a>
+        </div>
+        <div class="lg:w-1/2 flex justify-center">
+            <img src="{% static 'core/images/pasta.png' %}" alt="About FoodPoint" class="w-3/4 max-w-sm drop-shadow-xl">
+        </div>
+    </div>
+  
+</section>
+<!-- Chef Note Section -->
+<section id="chef-note" class="bg-white">
+    <div class="container mx-auto px-6 py-16">
+        <div class="max-w-3xl mx-auto bg-orange-50 border border-orange-100 rounded-2xl p-8 shadow-sm">
+            <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 text-center">Chef’s Note</h2>
+            <blockquote class="mt-4 text-gray-700 leading-relaxed text-center">
+                “Every dish is crafted to balance comfort and flavor. We start with fresh ingredients,
+                finish with a touch of warmth, and serve it with a smile. Hope you enjoy every bite.”
+            </blockquote>
+            <div class="mt-6 flex items-center justify-center gap-3 text-gray-600">
+                <span class="font-semibold text-gray-800">Chef Huzaifa</span>
+                <span class="text-gray-400">•</span>
+                <span>Head Chef, FoodPoint</span>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock maincontent %}

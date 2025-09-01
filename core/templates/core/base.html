@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
+    <link  href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500&display=swap" rel="stylesheet">
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <!--Header-->
+    <header class="w-full bg-orange-100">
+        <div class="container mx-auto grid grid-cols-2 md:grid-cols-3 items-center gap-3 md:gap-6 py-4 px-16">
+            <a href="{% url "home" %}" class="text-3xl md:text-4xl font-bold text-orange-500"
+            style="font-family: 'Dancing Script', cursive;">Food Point</a>
+            {% block navbar %}
+                <div class="hidden md:block md:justify-self-center">{% include "core/components/navbar.html" %}</div>
+            {% endblock navbar %}
+            <div class="flex items-center gap-3 justify-self-end">
+                <!-- Desktop search -->
+                <form action="{% url 'menu' %}" method="get" class="hidden md:flex items-center w-64">
+                    <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Search dishes..." class="w-full border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200 bg-orange-100">
+                </form>
+                <!-- Mobile search icon -->
+                <button id="searchToggle" class="md:hidden text-gray-700 hover:text-orange-600" aria-label="Open search" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 104.22 12.076l3.227 3.227a.75.75 0 101.06-1.06l-3.227-3.228A6.75 6.75 0 0010.5 3.75zm-5.25 6.75a5.25 5.25 0 1110.5 0 5.25 5.25 0 01-10.5 0z" clip-rule="evenodd"/></svg>
+                </button>
+
+                <!-- Cart icon -->
+                <a href="{% url 'cart' %}" class="relative" aria-label="Cart">
+                    {% if cart_count %}
+                    <span class="absolute -right-2 -top-2 bg-orange-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">{{ cart_count }}</span>
+                    {% endif %}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg>
+                </a>
+
+                <!-- Mobile menu (hamburger) -->
+                <button id="menuToggle" class="md:hidden text-gray-700 hover:text-orange-600" aria-label="Open menu" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile search panel -->
+            <div id="mobileSearch" class="col-span-2 md:col-span-3 w-full md:hidden hidden">
+                <form action="{% url 'menu' %}" method="get" class="mt-2">
+                    <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Search dishes..." class="w-full border border-orange-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200 bg-white">
+                </form>
+            </div>
+
+            <!-- Mobile menu panel -->
+            <div id="mobileMenu" class="col-span-2 md:col-span-3 w-full md:hidden hidden">
+                <div class="mt-2 bg-white rounded-2xl shadow p-4">
+                    {% include "core/components/navbar.html" %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    
+    {% block hero %}{% endblock hero %}
+    {% block maincontent %}{% endblock maincontent %}
+    {% block footer %}
+        {% include "core/components/footer.html" %}
+    {% endblock footer %}
+</body>
+</html>
+<script>
+    (function() {
+        const menuBtn = document.getElementById('menuToggle');
+        const searchBtn = document.getElementById('searchToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileSearch = document.getElementById('mobileSearch');
+
+        function toggle(el, btn) {
+            if (!el) return;
+            const isHidden = el.classList.contains('hidden');
+            // Hide both panels first
+            if (mobileMenu) mobileMenu.classList.add('hidden');
+            if (mobileSearch) mobileSearch.classList.add('hidden');
+            // Toggle the target
+            if (isHidden) el.classList.remove('hidden');
+            if (btn) btn.setAttribute('aria-expanded', String(isHidden));
+        }
+
+        if (menuBtn) menuBtn.addEventListener('click', function() { toggle(mobileMenu, menuBtn); });
+        if (searchBtn) searchBtn.addEventListener('click', function() { toggle(mobileSearch, searchBtn); });
+
+        // Close panels on resize up to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                if (mobileMenu) mobileMenu.classList.add('hidden');
+                if (mobileSearch) mobileSearch.classList.add('hidden');
+                if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+                if (searchBtn) searchBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    })();
+</script>
